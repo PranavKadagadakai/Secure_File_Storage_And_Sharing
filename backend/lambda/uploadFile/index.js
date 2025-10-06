@@ -6,10 +6,16 @@ const { getUserIdFromEvent } = require("/opt/nodejs/utils/auth");
 const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const BUCKET_NAME = process.env.FILES_BUCKET;
-const FILES_TABLE = process.env.FILES_TABLE;
-
 exports.handler = async (event) => {
+  const BUCKET_NAME = process.env.FILES_BUCKET;
+  const FILES_TABLE = process.env.FILES_TABLE;
+
+  // New: Check for critical configuration before continuing
+  if (!BUCKET_NAME || !FILES_TABLE) {
+    console.error("Configuration Error: Missing Environment Variables");
+    return error("Internal server configuration error", 500);
+  }
+
   try {
     const userId = getUserIdFromEvent(event);
     const body = JSON.parse(event.body);
@@ -52,6 +58,18 @@ exports.handler = async (event) => {
       Expires: 3600, // 1 hour
       ContentType: fileType,
     });
+
+    // 🚨 CRITICAL DEBUG: Log the result before returning 🚨
+    console.log(`DEBUG: Generated File ID: ${fileId}`);
+    console.log(`DEBUG: Target S3 Key: ${s3Key}`);
+    console.log(`DEBUG: Generated uploadUrl: ${uploadUrl}`); // CHECK THIS IN CLOUDWATCH
+
+    // 🚨 FAIL-SAFE CHECK: Ensure the URL is valid before proceeding
+    if (!uploadUrl || uploadUrl.includes("undefined")) {
+      console.error("CRITICAL ERROR: S3 signed URL generation failed.");
+      // Throwing an error here ensures the client receives a 500, not an 'undefined' 404
+      throw new Error("Failed to generate S3 pre-signed URL.");
+    }
 
     // Save metadata to DynamoDB
     const timestamp = Date.now();

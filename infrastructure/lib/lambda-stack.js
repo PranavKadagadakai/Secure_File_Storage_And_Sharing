@@ -28,7 +28,7 @@ class LambdaStack extends cdk.Stack {
     // Define Lambdas (upload, complete, download, list, delete, createShare)
     const uploadFileFn = new lambda.Function(this, "UploadFileFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "uploadFile.handler",
+      handler: "index.handler",
       code: lambda.Code.fromAsset("../backend/lambda/uploadFile"),
       layers: [sharedLayer],
       environment: commonEnv,
@@ -41,7 +41,7 @@ class LambdaStack extends cdk.Stack {
       "UploadCompleteFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "uploadComplete.handler",
+        handler: "index.handler",
         code: lambda.Code.fromAsset("../backend/lambda/uploadComplete"),
         layers: [sharedLayer],
         environment: commonEnv,
@@ -52,7 +52,7 @@ class LambdaStack extends cdk.Stack {
 
     const downloadFileFn = new lambda.Function(this, "DownloadFileFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "downloadFile.handler",
+      handler: "index.handler",
       code: lambda.Code.fromAsset("../backend/lambda/downloadFile"),
       layers: [sharedLayer],
       environment: commonEnv,
@@ -62,7 +62,7 @@ class LambdaStack extends cdk.Stack {
 
     const listFilesFn = new lambda.Function(this, "ListFilesFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "listFiles.handler",
+      handler: "index.handler",
       code: lambda.Code.fromAsset("../backend/lambda/listFiles"),
       layers: [sharedLayer],
       environment: commonEnv,
@@ -72,7 +72,7 @@ class LambdaStack extends cdk.Stack {
 
     const deleteFileFn = new lambda.Function(this, "DeleteFileFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "deleteFile.handler",
+      handler: "index.handler",
       code: lambda.Code.fromAsset("../backend/lambda/deleteFile"),
       layers: [sharedLayer],
       environment: commonEnv,
@@ -85,7 +85,7 @@ class LambdaStack extends cdk.Stack {
       "CreateShareLinkFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "createShareLink.handler",
+        handler: "index.handler",
         code: lambda.Code.fromAsset("../backend/lambda/createShareLink"),
         layers: [sharedLayer],
         environment: commonEnv,
