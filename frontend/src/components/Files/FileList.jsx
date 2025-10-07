@@ -19,7 +19,7 @@ export const FileList = ({ refreshTrigger }) => {
       const user = await getCurrentUser();
       const userId = user.userId;
       const response = await apiService.listFiles(userId);
-      setFiles(response.items || []);
+      setFiles(response.data.files || []);
     } catch (err) {
       console.error("Error loading files:", err);
       setError("Failed to load files");

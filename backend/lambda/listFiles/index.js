@@ -24,8 +24,13 @@ exports.handler = async (event) => {
       TableName: FILES_TABLE,
       IndexName: "UserFilesIndex",
       KeyConditionExpression: "userId = :userId",
+      FilterExpression: "#status <> :deleted",
+      ExpressionAttributeNames: {
+        "#status": "status",
+      },
       ExpressionAttributeValues: {
         ":userId": userId,
+        ":deleted": "deleted",
       },
       Limit: parseInt(limit),
       ScanIndexForward: order === "asc",
@@ -37,7 +42,16 @@ exports.handler = async (event) => {
       );
     }
 
+    console.log("DynamoDB query params:", JSON.stringify(params, null, 2));
+
     const result = await dynamodb.query(params).promise();
+
+    console.log("UserID:", userId);
+    console.log("Query params:", {
+      TableName: FILES_TABLE,
+      KeyConditionExpression: "userId = :uid",
+      ExpressionAttributeValues: { ":uid": userId },
+    });
 
     // Prepare response
     const response = {

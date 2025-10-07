@@ -36,13 +36,9 @@ export const FileUpload = ({ onUploadComplete }) => {
         selectedFile.type
       );
 
-      console.log("API response:", response);
+      const { fileId, uploadUrl, message } = response.data || response;
 
-      // Check for common nesting patterns (like 'data' or 'body')
-      // The structure you need is { fileId, uploadUrl, message }
-      const { fileId, uploadUrl } = response.data || response;
-      console.log("Received upload URL:", uploadUrl);
-      console.log("File ID:", fileId);
+      console.log("API response message:", message);
 
       if (!uploadUrl) {
         // This condition might be met, and it proceeds with a bad URL

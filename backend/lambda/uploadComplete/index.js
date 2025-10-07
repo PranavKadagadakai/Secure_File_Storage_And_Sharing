@@ -48,7 +48,7 @@ exports.handler = async (event) => {
         TableName: FILES_TABLE,
         Key: { fileId, userId },
         UpdateExpression:
-          "SET #status = :status, s3VersionId = :versionId, checksum = :checksum, modifiedAt = :timestamp",
+          "SET #status = :status, s3VersionId = :versionId, checksum = :checksum, modifiedAt = :timestamp, uploadedAt = if_not_exists(uploadedAt, :uploadedAt)",
         ExpressionAttributeNames: {
           "#status": "status",
         },
@@ -57,6 +57,7 @@ exports.handler = async (event) => {
           ":versionId": versionId,
           ":checksum": etag,
           ":timestamp": Date.now(),
+          ":uploadedAt": Date.now(),
         },
       })
       .promise();

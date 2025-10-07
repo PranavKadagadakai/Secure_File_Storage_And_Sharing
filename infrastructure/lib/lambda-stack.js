@@ -106,13 +106,16 @@ class LambdaStack extends cdk.Stack {
     props.filesTable.grantReadData(listFilesFn);
     props.filesTable.grantReadWriteData(deleteFileFn);
     props.filesTable.grantReadData(createShareLinkFn);
+    props.filesTable.grantReadWriteData(uploadCompleteFn);
 
     props.usersTable.grantReadWriteData(uploadFileFn);
     props.usersTable.grantReadWriteData(deleteFileFn);
+    props.usersTable.grantReadWriteData(uploadCompleteFn);
 
     props.accessLogsTable.grantWriteData(uploadFileFn);
     props.accessLogsTable.grantWriteData(downloadFileFn);
     props.accessLogsTable.grantWriteData(deleteFileFn);
+    props.accessLogsTable.grantWriteData(uploadCompleteFn);
 
     props.shareLinksTable.grantReadWriteData(createShareLinkFn);
 
