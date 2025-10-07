@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "aws-sdk": "^2.1360.0",
-    "uuid": "^9.0.0",
-    "jsonwebtoken": "^9.0.0",
-    "bcryptjs": "^2.4.3"
+    "aws-sdk": "^2.1692.0",
+    "bcryptjs": "^2.4.3",
+    "jmespath": "^0.16.0",
+    "jsonwebtoken": "^9.0.2",
+    "jws": "^4.0.0",
+    "querystring": "^0.2.1",
+    "sax": "^1.4.1",
+    "uuid": "^9.0.1",
+    "xml2js": "^0.6.2",
+    "xmlbuilder": "^15.1.1"
   }
 }

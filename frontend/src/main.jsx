@@ -6,13 +6,6 @@ import App from "./App.jsx";
 import "./index.css";
 import { awsConfig } from "./aws-config.js";
 
-// Log the configuration to verify values are loaded
-console.log("Amplify Config Loaded:", {
-  userPoolId: awsConfig.Auth.userPoolId,
-  userPoolClientId: awsConfig.Auth.userPoolClientId,
-  identityPoolId: awsConfig.Auth.identityPoolId,
-});
-
 // Configure Amplify
 Amplify.configure({
   Auth: {

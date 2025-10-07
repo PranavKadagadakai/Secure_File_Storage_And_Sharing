@@ -11,7 +11,7 @@ const infra = new cdk.Stack(app, "InfrastructureStack"); // optional top-level s
 
 const storage = new StorageStack(app, "StorageStack");
 const database = new DatabaseStack(app, "DatabaseStack");
-const auth = new AuthStack(app, "AuthStackV2");
+const auth = new AuthStack(app, "AuthStack");
 
 // pass bucket and tables + userPool to Lambda stack
 new LambdaStack(app, "LambdaStack", {

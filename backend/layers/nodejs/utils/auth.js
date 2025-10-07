@@ -1,26 +1,20 @@
-const jwt = require("jsonwebtoken");
-
-module.exports = {
-  verifyToken: (token) => {
-    try {
-      return jwt.decode(token);
-    } catch (error) {
-      throw new Error("Invalid token");
+// backend/layers/nodejs/utils/auth.js
+exports.getUserIdFromEvent = (event) => {
+  try {
+    // When using Cognito authorizer, user info is in requestContext
+    if (event.requestContext?.authorizer?.claims) {
+      const claims = event.requestContext.authorizer.claims;
+      return claims.sub || claims["cognito:username"] || null;
     }
-  },
 
-  getUserIdFromEvent: (event) => {
-    const token = event.headers.Authorization?.replace("Bearer ", "");
-    if (!token) {
-      throw new Error("No authorization token provided");
+    // Fallback for testing without authorizer
+    if (event.queryStringParameters?.userId) {
+      return event.queryStringParameters.userId;
     }
-    const decoded = jwt.decode(token);
-    return decoded.sub || decoded["cognito:username"];
-  },
 
-  hasPermission: (userGroups, requiredRole) => {
-    const roleHierarchy = { Admin: 3, PowerUser: 2, Viewer: 1 };
-    const userRole = userGroups?.[0] || "Viewer";
-    return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
-  },
+    return null;
+  } catch (err) {
+    console.error("Error extracting userId:", err);
+    return null;
+  }
 };

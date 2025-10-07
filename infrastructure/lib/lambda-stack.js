@@ -41,8 +41,8 @@ class LambdaStack extends cdk.Stack {
       "UploadCompleteFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "index.handler",
-        code: lambda.Code.fromAsset("../backend/lambda/uploadComplete"),
+        handler: "uploadComplete/index.handler",
+        code: lambda.Code.fromAsset("../backend/lambda"),
         layers: [sharedLayer],
         environment: commonEnv,
         timeout: cdk.Duration.seconds(30),
@@ -52,8 +52,8 @@ class LambdaStack extends cdk.Stack {
 
     const downloadFileFn = new lambda.Function(this, "DownloadFileFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "index.handler",
-      code: lambda.Code.fromAsset("../backend/lambda/downloadFile"),
+      handler: "downloadFile/index.handler",
+      code: lambda.Code.fromAsset("../backend/lambda"),
       layers: [sharedLayer],
       environment: commonEnv,
       timeout: cdk.Duration.seconds(30),
@@ -62,8 +62,8 @@ class LambdaStack extends cdk.Stack {
 
     const listFilesFn = new lambda.Function(this, "ListFilesFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "index.handler",
-      code: lambda.Code.fromAsset("../backend/lambda/listFiles"),
+      handler: "listFiles/index.handler",
+      code: lambda.Code.fromAsset("../backend/lambda"),
       layers: [sharedLayer],
       environment: commonEnv,
       timeout: cdk.Duration.seconds(30),
@@ -72,8 +72,8 @@ class LambdaStack extends cdk.Stack {
 
     const deleteFileFn = new lambda.Function(this, "DeleteFileFunction", {
       runtime: lambda.Runtime.NODEJS_18_X,
-      handler: "index.handler",
-      code: lambda.Code.fromAsset("../backend/lambda/deleteFile"),
+      handler: "deleteFile/index.handler",
+      code: lambda.Code.fromAsset("../backend/lambda"),
       layers: [sharedLayer],
       environment: commonEnv,
       timeout: cdk.Duration.seconds(30),
@@ -85,8 +85,8 @@ class LambdaStack extends cdk.Stack {
       "CreateShareLinkFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "index.handler",
-        code: lambda.Code.fromAsset("../backend/lambda/createShareLink"),
+        handler: "createShareLink/index.handler",
+        code: lambda.Code.fromAsset("../backend/lambda"),
         layers: [sharedLayer],
         environment: commonEnv,
         timeout: cdk.Duration.seconds(30),
@@ -122,8 +122,15 @@ class LambdaStack extends cdk.Stack {
       description: "API for file storage and sharing",
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
-        allowMethods: apigateway.Cors.ALL_METHODS,
-        allowHeaders: ["Content-Type", "Authorization"],
+        allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowHeaders: [
+          "Content-Type",
+          "Authorization",
+          "X-Amz-Date",
+          "X-Api-Key",
+          "X-Amz-Security-Token",
+        ],
+        allowCredentials: true,
       },
     });
 
@@ -153,6 +160,25 @@ class LambdaStack extends cdk.Stack {
     list.addMethod("GET", new apigateway.LambdaIntegration(listFilesFn), {
       authorizer,
       authorizationType: apigateway.AuthorizationType.COGNITO,
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            "method.response.header.Access-Control-Allow-Origin": true,
+          },
+        },
+      ],
+      integrationResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            "method.response.header.Access-Control-Allow-Origin": "'*'", // Use '*' or a more specific domain for production
+          },
+          responseTemplates: {
+            "application/json": "$input.json('$')",
+          },
+        },
+      ],
     });
 
     const fileId = files.addResource("{fileId}");

@@ -30,11 +30,25 @@ export const FileUpload = ({ onUploadComplete }) => {
 
     try {
       // Step 1: Request presigned URL
-      const { fileId, uploadUrl } = await apiService.uploadFile(
+      const response = await apiService.uploadFile(
         selectedFile.name,
         selectedFile.size,
         selectedFile.type
       );
+
+      console.log("API response:", response);
+
+      // Check for common nesting patterns (like 'data' or 'body')
+      // The structure you need is { fileId, uploadUrl, message }
+      const { fileId, uploadUrl } = response.data || response;
+      console.log("Received upload URL:", uploadUrl);
+      console.log("File ID:", fileId);
+
+      if (!uploadUrl) {
+        // This condition might be met, and it proceeds with a bad URL
+        console.error("Upload URL is missing from the API response.");
+        return;
+      }
 
       // Step 2: Upload file directly to S3
       await axios.put(uploadUrl, selectedFile, {
