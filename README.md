@@ -67,7 +67,7 @@ The deployment process is split into two phases: provisioning the **Backend Infr
 
 3.  **Deploy All Stacks:** Deploy the Storage, Database, Auth, and Lambda stacks. This command generates the configuration file needed for the frontend.
     ```bash
-    pnpm exec cdk deploy --all --outputs-file ../frontend/cdk-outputs.json
+    pnpm exec cdk deploy --all --outputs-file ../frontend/cdk-outputs.json --require-approval never
     ```
     _Note: The API Gateway has been configured for CORS to allow access from the frontend development server (`http://localhost:5173`)._
 
