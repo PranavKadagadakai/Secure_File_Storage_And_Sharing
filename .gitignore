@@ -10,5 +10,6 @@ cdk.out/
 .aws-sam/
 
 pranavkadagadakai-secure_file_storage_and_sharing.txt
+pranavkadagadakai-secure_file_storage_and_sharing-frontend.txt
 
 cdk-outputs.json
