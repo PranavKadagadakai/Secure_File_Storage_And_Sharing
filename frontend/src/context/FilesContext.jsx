@@ -16,7 +16,8 @@ export const FilesProvider = ({ children }) => {
       const user = await getCurrentUser();
       const userId = user.userId;
       const response = await apiService.listFiles(userId);
-      setFiles(response.items || []);
+      // console.log("Response:", response);
+      setFiles(response.data.files || []);
     } catch (error) {
       console.error("Error loading files:", error);
       toast.error("Failed to load files");

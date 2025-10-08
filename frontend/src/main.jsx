@@ -5,6 +5,8 @@ import { Amplify } from "aws-amplify";
 import App from "./App.jsx";
 import "./index.css";
 import { awsConfig } from "./aws-config.js";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { FilesProvider } from "./context/FilesContext.jsx";
 
 // Configure Amplify
 Amplify.configure({
@@ -27,6 +29,10 @@ Amplify.configure({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <FilesProvider>
+        <App />
+      </FilesProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

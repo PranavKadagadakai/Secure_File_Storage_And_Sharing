@@ -38,7 +38,7 @@ export const FileUpload = () => {
         selectedFile.type
       );
 
-      const { fileId, uploadUrl } = response;
+      const { fileId, uploadUrl } = response.data;
 
       if (!uploadUrl) {
         throw new Error("Failed to get upload URL from server");
