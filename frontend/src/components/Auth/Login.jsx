@@ -1,75 +1,71 @@
 // src/components/Auth/Login.jsx
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { Input } from "../common/Input";
+import { Button } from "../common/Button";
+import { Card } from "../common/Card";
+import { getErrorMessage } from "../../utils/errorMessages";
+import { toast } from "react-toastify";
 
 export const Login = ({ onToggleMode }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
-    const result = await signIn(email, password);
-    if (!result.success) {
-      setError(result.error);
+    try {
+      const result = await signIn(email, password);
+      if (!result.success) {
+        toast.error(getErrorMessage({ message: result.error }));
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px" }}>
-      <h2>Sign In</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Email:</label>
-          <input
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <Card className="w-full max-w-md p-8">
+        <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+          Sign In
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Input
             type="email"
+            label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            placeholder="you@example.com"
           />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Password:</label>
-          <input
+          <Input
             type="password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+            placeholder="••••••••"
           />
-        </div>
-        {error && (
-          <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
-        )}
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ width: "100%", padding: "10px", cursor: "pointer" }}
-        >
-          {loading ? "Signing in..." : "Sign In"}
-        </button>
-      </form>
-      <p style={{ marginTop: "20px", textAlign: "center" }}>
-        Don't have an account?{" "}
-        <button
-          onClick={onToggleMode}
-          style={{
-            background: "none",
-            border: "none",
-            color: "blue",
-            cursor: "pointer",
-          }}
-        >
-          Sign Up
-        </button>
-      </p>
+          <Button type="submit" loading={loading} className="w-full">
+            Sign In
+          </Button>
+        </form>
+        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          Don't have an account?{" "}
+          <button
+            onClick={onToggleMode}
+            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          >
+            Sign Up
+          </button>
+        </p>
+      </Card>
     </div>
   );
 };
