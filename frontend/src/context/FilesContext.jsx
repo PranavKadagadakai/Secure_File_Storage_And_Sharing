@@ -16,7 +16,6 @@ export const FilesProvider = ({ children }) => {
       const user = await getCurrentUser();
       const userId = user.userId;
       const response = await apiService.listFiles(userId);
-      // console.log("Response:", response);
       setFiles(response.data.files || []);
     } catch (error) {
       console.error("Error loading files:", error);
@@ -34,7 +33,6 @@ export const FilesProvider = ({ children }) => {
       toast.success("File deleted successfully");
     } catch (error) {
       console.error("Error deleting file:", error);
-      toast.error("Failed to delete file");
       throw error;
     }
   }, []);

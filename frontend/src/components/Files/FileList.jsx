@@ -30,7 +30,7 @@ export const FileList = () => {
       await deleteFile(fileId); // Use the deleteFile function from context
       // Note: deleteFile in FilesContext already updates the state and shows a toast
     } catch (err) {
-      // toast.error is handled inside deleteFile in context
+      toast.error("Failed to delete file");
     }
   };
 
